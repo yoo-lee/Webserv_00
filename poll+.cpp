@@ -3,6 +3,14 @@
 #include <poll.h>
 #include <fcntl.h>
 
+struct pollfd 
+{
+    int fd;       // 監視するファイルディスクリプタ
+    short events; // 監視するイベント
+    short revents; // 発生したイベント (戻り値で設定される)
+};
+
+
 int main() {
     int fd1 = open("1.txt" ,O_RDONLY);
 	int fd2 = open("2.txt" , O_RDONLY);
@@ -12,6 +20,9 @@ int main() {
 
     fds[0].fd = fd1;
     fds[0].events = POLLIN; // 読み取り可能イベントを監視
+	// 具体的には、POLLINフラグがセットされた場合、対応するファイルディスクリプタ
+	// が読み取り可能な状態であることを意味します。これは、ファイルディスクリプタから
+	// データを読み取ることができる状態を表しています。
 
     fds[1].fd = fd2;
     fds[1].events = POLLOUT; // 書き込み可能イベントを監視
@@ -20,7 +31,8 @@ int main() {
     if (readyDescriptors > 0) 
 	{
         // イベントが発生したファイルディスクリプタの処理
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) 
+		{
             if (fds[i].revents & POLLIN) {
                 // 読み取り可能イベントが発生した場合の処理
             std::cout << "File descriptor " << fds[i].fd << " is ready for reading." << std::endl;
@@ -42,7 +54,8 @@ int main() {
 }
 
 // poll関数の戻り値は以下のような状況で変化します：
+// 監視対象のいずれかのファイルディスクリプタにイベントが発生した場合：
 
-// 監視対象のいずれかのファイルディスクリプタにイベントが発生した場合：戻り値はイベントが発生したファイルディスクリプタの数（0 より大きい値）
+// 戻り値はイベントが発生したファイルディスクリプタの数（0 より大きい値）
 // タイムアウト時間が経過し、イベントが発生しなかった場合：戻り値は 0
 // poll関数の呼び出し中にエラーが発生した場合：戻り値は -1
