@@ -3,12 +3,12 @@
 #include <poll.h>
 #include <fcntl.h>
 
-struct pollfd 
-{
-    int fd;       // 監視するファイルディスクリプタ
-    short events; // 監視するイベント
-    short revents; // 発生したイベント (戻り値で設定される)
-};
+// struct pollfd
+// {
+//     int fd;       // 監視するファイルディスクリプタ
+//     short events; // 監視するイベント
+//     short revents; // 発生したイベント (戻り値で設定される)
+// };
 
 
 int main() {
@@ -19,7 +19,8 @@ int main() {
     int timeout = 5000; // タイムアウト時間（ミリ秒）
 
     fds[0].fd = fd1;
-    fds[0].events = POLLIN; // 読み取り可能イベントを監視
+    fds[0].events = POLLIN; 
+	// 読み取り可能イベントを監視
 	// 具体的には、POLLINフラグがセットされた場合、対応するファイルディスクリプタ
 	// が読み取り可能な状態であることを意味します。これは、ファイルディスクリプタから
 	// データを読み取ることができる状態を表しています。
